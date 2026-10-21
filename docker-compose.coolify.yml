@@ -1,5 +1,6 @@
 # Homarr dashboard (docker-compose for Coolify).
 # /appdata holds the SQLite DB + config; kept in a named volume so it survives redeploys.
+# gate = nginx proxy that injects the floating "back to logo" (×) button into Homarr's HTML.
 services:
   homarr:
     image: ghcr.io/homarr-labs/homarr:latest
@@ -10,6 +11,16 @@ services:
       - homarr_data:/appdata
     expose:
       - 7575
+
+  gate:
+    image: nginx:alpine
+    restart: unless-stopped
+    depends_on:
+      - homarr
+    volumes:
+      - ./gate.conf:/etc/nginx/conf.d/default.conf:ro
+    expose:
+      - 80
 
 volumes:
   homarr_data:
