@@ -1,0 +1,15 @@
+# Homarr dashboard (docker-compose for Coolify).
+# /appdata holds the SQLite DB + config; kept in a named volume so it survives redeploys.
+services:
+  homarr:
+    image: ghcr.io/homarr-labs/homarr:latest
+    restart: unless-stopped
+    environment:
+      SECRET_ENCRYPTION_KEY: ${SECRET_ENCRYPTION_KEY}
+    volumes:
+      - homarr_data:/appdata
+    expose:
+      - 7575
+
+volumes:
+  homarr_data:
